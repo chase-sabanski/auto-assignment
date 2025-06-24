@@ -6,12 +6,10 @@ from collections import Counter
 current_directory = os.path.dirname(__file__)
 os.chdir(current_directory)
 
-# Steps
 # ✅ 1. import an export of all swimlane cases, only three columns are needed: "input_sl_tickets", change to default SL export name when the script is finished
-#       > Current Owner
-#       > Make
-#       > Model
-input_sl_tickets = pd.read_csv("input_sl_tickets.csv")
+for filename in os.listdir(current_directory):
+    if filename.startswith("Case and Incident Management"):
+        input_sl_tickets = pd.read_csv(filename)
 
 # ✅ 2. reduce dataframe to the 3 necessary columns
 trimmed_input = input_sl_tickets[["Make", "Model", "Current Owner"]]
@@ -27,7 +25,6 @@ for index, row in trimmed_input.iterrows():
         trimmed_input.drop([index], inplace=True)
     elif row["Model"] == "EMPTY":
         trimmed_input.drop([index], inplace=True)
-# verified: numbers are expected!
 
 # 4. create dictionary of assigned models, assign analyst by # of occurrences a given model is assigned to them
 # rename this dictionary for clarity?
@@ -44,7 +41,6 @@ for index, row in trimmed_input.iterrows():
             assignment_dict[row["Model"]][row["Current Owner"]] = 0
         if row["Current Owner"] in assignment_dict[row["Model"]]:
             assignment_dict[row["Model"]][row["Current Owner"]] += 1
-# verified: analyst with the most occurrences of a model gets assigned the model 🙌
 
 existing_assignments = {}
 
@@ -93,5 +89,5 @@ new_model_assignments.update(existing_assignments)
 dictionary_output = pd.DataFrame.from_dict(new_model_assignments, orient="index",
                                             columns=["Current Owner"])
 dictionary_output.index.name = "Model"
-dictionary_output.to_csv("dictionary test.csv", sep=",", index=True, encoding="utf-8")
+dictionary_output.to_csv("model_assignments.csv", sep=",", index=True, encoding="utf-8")
 input("Success! Press Enter to exit...")
