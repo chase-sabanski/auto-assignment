@@ -167,7 +167,6 @@ dictionary_output = pd.DataFrame.from_dict(new_model_assignments, orient="index"
                                             columns=["Current Owner"])
 dictionary_output.index.name = "Model"
 timestamp = datetime.now().strftime("%Y_%m_%d-%I.%M.%S %p")
-# the model_assignments.csv isn't as useful as I originally thought, but I'm leaving it in case I need it later
 dictionary_output.to_csv(f"model_assignments - {timestamp}.csv", sep=",", index=True, encoding="utf-8")
 sl_tickets_with_CU.to_csv(f"Swimlane Tickets with Updated Owners - {timestamp}.csv", sep=",", index=False, encoding="utf-8")
 
